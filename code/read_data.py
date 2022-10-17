@@ -26,7 +26,7 @@ def plot_hr(df, mpl_dates, plotdir):
         1, 2, sharey=True, figsize=(7, 5), gridspec_kw={"width_ratios": [3, 1]}
     )
     fig.subplots_adjust(wspace=0, bottom=0.15)
-    axarr[0].scatter(mpl_dates, df["HR"])
+    axarr[0].scatter(mpl_dates, df["HR"], color=_colors[0])
     axarr[0].xaxis.set_major_formatter(mpl.dates.DateFormatter("%Y-%m-%d"))
     axarr[0].set_xlabel("date")
     axarr[0].set_ylabel("Resting HR")
@@ -34,7 +34,8 @@ def plot_hr(df, mpl_dates, plotdir):
     axarr[0].grid(True, alpha=0.3)
 
     # Calculate the kernel-density estimate to plot a smooth function over the histogram
-    xvalues = np.linspace(np.min(df["HR"]) - 10, np.max(df["HR"]) + 10)
+    # xvalues = np.linspace(np.min(df["HR"]) - 10, np.max(df["HR"]) + 10)
+    xvalues = np.linspace(np.min(df["HR"]) * 0.95, np.max(df["HR"]) * 1.05)
     yvalues = stats.gaussian_kde(df["HR"]).evaluate(xvalues)
     print(yvalues)
 
@@ -57,7 +58,7 @@ def plot_hrvpoints(df, mpl_dates, plotdir):
     fig.subplots_adjust(wspace=0, bottom=0.15)
 
     # ax = fig.add_subplot(121)
-    axarr[0].scatter(mpl_dates, df["HRV4T_Recovery_Points"])
+    axarr[0].scatter(mpl_dates, df["HRV4T_Recovery_Points"], color=_colors[0])
     axarr[0].xaxis.set_major_formatter(mpl.dates.DateFormatter("%Y-%m-%d"))
     axarr[0].set_xlabel("date")
     axarr[0].set_ylabel("HRV recovery points")
@@ -67,8 +68,8 @@ def plot_hrvpoints(df, mpl_dates, plotdir):
 
     # Calculate the kernel-density estimate to plot a smooth function over the histogram
     xvalues = np.linspace(
-        np.min(df["HRV4T_Recovery_Points"]) - 10,
-        np.max(df["HRV4T_Recovery_Points"]) + 10,
+        np.min(df["HRV4T_Recovery_Points"]) * 0.95,
+        np.max(df["HRV4T_Recovery_Points"]) * 1.05,
     )
     yvalues = stats.gaussian_kde(df["HRV4T_Recovery_Points"]).evaluate(xvalues)
     print(yvalues)
@@ -119,7 +120,7 @@ def plot_rmssd(df, mpl_dates, plotdir):
     axarr[0].grid(True, alpha=0.3)
 
     # Calculate the kernel-density estimate to plot a smooth function over the histogram
-    xvalues = np.linspace(np.min(df["rMSSD"]) - 10, np.max(df["rMSSD"]) + 10)
+    xvalues = np.linspace(np.min(df["rMSSD"]) * 0.95, np.max(df["rMSSD"]) * 1.05)
     yvalues = stats.gaussian_kde(df["rMSSD"]).evaluate(xvalues)
     print(yvalues)
 
