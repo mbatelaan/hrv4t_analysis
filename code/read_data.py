@@ -25,19 +25,29 @@ def plot_hr(df, mpl_dates, plotdir):
     fig, axarr = plt.subplots(
         1, 2, sharey=True, figsize=(7, 5), gridspec_kw={"width_ratios": [3, 1]}
     )
+    # fig, axarr = plt.subplots(1, 2, sharey=True, figsize=(7, 5))
     fig.subplots_adjust(wspace=0, bottom=0.15)
     axarr[0].scatter(mpl_dates, df["HR"], color=_colors[0])
     axarr[0].xaxis.set_major_formatter(mpl.dates.DateFormatter("%Y-%m-%d"))
     axarr[0].set_xlabel("date")
     axarr[0].set_ylabel("Resting HR")
+    # xlabels = ax.get_xticklabels()
+    # axarr[0].set_xticklabels(
+    #     xlabels,
+    #     fontsize="x-small",
+    #     rotation=15,
+    #     ha="right",
+    #     rotation_mode="anchor",
+    # )
     axarr[0].tick_params(axis="x", rotation=15)
     axarr[0].grid(True, alpha=0.3)
+    axarr[0].xaxis.set_major_formatter(mpl.dates.DateFormatter("%Y-%m"))
+    axarr[0].xaxis.set_major_locator(mpl.dates.MonthLocator())
 
     # Calculate the kernel-density estimate to plot a smooth function over the histogram
     # xvalues = np.linspace(np.min(df["HR"]) - 10, np.max(df["HR"]) + 10)
     xvalues = np.linspace(np.min(df["HR"]) * 0.95, np.max(df["HR"]) * 1.05)
     yvalues = stats.gaussian_kde(df["HR"]).evaluate(xvalues)
-    print(yvalues)
 
     axarr[1].hist(
         df["HR"], bins=20, orientation="horizontal", density=True, color=_colors[2]
@@ -62,9 +72,19 @@ def plot_hrvpoints(df, mpl_dates, plotdir):
     axarr[0].xaxis.set_major_formatter(mpl.dates.DateFormatter("%Y-%m-%d"))
     axarr[0].set_xlabel("date")
     axarr[0].set_ylabel("HRV recovery points")
+    # xlabels = axarr[0].get_xticklabels()
+    # axarr[0].set_xticklabels(
+    #     xlabels,
+    #     fontsize="x-small",
+    #     rotation=15,
+    #     ha="right",
+    #     rotation_mode="anchor",
+    # )
     axarr[0].tick_params(axis="x", rotation=15)
     # plt.xticks(rotation=15)
     axarr[0].grid(True, alpha=0.3)
+    axarr[0].xaxis.set_major_formatter(mpl.dates.DateFormatter("%Y-%m"))
+    axarr[0].xaxis.set_major_locator(mpl.dates.MonthLocator())
 
     # Calculate the kernel-density estimate to plot a smooth function over the histogram
     xvalues = np.linspace(
@@ -72,7 +92,6 @@ def plot_hrvpoints(df, mpl_dates, plotdir):
         np.max(df["HRV4T_Recovery_Points"]) * 1.05,
     )
     yvalues = stats.gaussian_kde(df["HRV4T_Recovery_Points"]).evaluate(xvalues)
-    print(yvalues)
 
     axarr[1].hist(
         df["HRV4T_Recovery_Points"],
@@ -116,13 +135,22 @@ def plot_rmssd(df, mpl_dates, plotdir):
     axarr[0].xaxis.set_major_formatter(mpl.dates.DateFormatter("%Y-%m-%d"))
     axarr[0].set_xlabel("date")
     axarr[0].set_ylabel("rMSSD")
+    # xlabels = ax.get_xticklabels()
+    # axarr[0].set_xticklabels(
+    #     xlabels,
+    #     fontsize="x-small",
+    #     rotation=15,
+    #     ha="right",
+    #     rotation_mode="anchor",
+    # )
     axarr[0].tick_params(axis="x", rotation=15)
     axarr[0].grid(True, alpha=0.3)
+    axarr[0].xaxis.set_major_formatter(mpl.dates.DateFormatter("%Y-%m"))
+    axarr[0].xaxis.set_major_locator(mpl.dates.MonthLocator())
 
     # Calculate the kernel-density estimate to plot a smooth function over the histogram
     xvalues = np.linspace(np.min(df["rMSSD"]) * 0.95, np.max(df["rMSSD"]) * 1.05)
     yvalues = stats.gaussian_kde(df["rMSSD"]).evaluate(xvalues)
-    print(yvalues)
 
     axarr[1].hist(
         df["rMSSD"], bins=20, orientation="horizontal", density=True, color=_colors[2]
@@ -131,6 +159,7 @@ def plot_rmssd(df, mpl_dates, plotdir):
     axarr[1].set_xticks([])
 
     plt.savefig(plotdir / Path("rmssd_against_time.pdf"))
+    plt.savefig(plotdir / Path("rmssd_against_time.png"), dpi=100)
     plt.close()
     return
 
@@ -142,7 +171,8 @@ def main():
     # rcParams.update({"figure.autolayout": True})
 
     datadir = Path.home() / Path("Dropbox/Apps/HRV4Training/")
-    plotdir = Path("../plots/")
+    analysisdir = Path.home() / Path("Dropbox/code/hrv4t_analysis/")
+    plotdir = analysisdir / Path("plots/")
     data_file_name = datadir / Path("MyMeasurements_Android.csv")
 
     df = pd.read_csv(data_file_name, header=0, index_col=False)
